@@ -1,7 +1,7 @@
 {
   description = "A very basic flake";
   inputs = {
-    arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp/deployment-tests";
+    arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
   };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
