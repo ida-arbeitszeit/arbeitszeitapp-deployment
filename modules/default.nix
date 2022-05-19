@@ -1,3 +1,4 @@
+{ arbeitszeitapp }:
 { config, lib, pkgs, ...}:
 let
   cfg = config.services.arbeitszeitapp;
@@ -7,6 +8,7 @@ in
     enable = lib.mkEnableOption "arbeitszeitapp";
   };
   config = lib.mkIf cfg.enable {
+    nixpkgs.overlays = [ arbeitszeitapp.overlay ];
     services.uwsgi = {
       enable = true;
       plugins = [ "python3" ];

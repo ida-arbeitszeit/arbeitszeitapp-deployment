@@ -11,10 +11,7 @@
       mkPkgs = system: import nixpkgs { inherit system; };
     in {
       nixosModules = {
-        default = { config, ... }: {
-          nixpkgs.overlays = [ arbeitszeitapp.overlay ];
-          imports = [ modules/default.nix ];
-        };
+        default = import modules/default.nix { inherit arbeitszeitapp; };
       };
       devShell = forAllSystems (system: pkgs:
         pkgs.mkShell {
