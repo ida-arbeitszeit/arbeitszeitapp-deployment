@@ -1,8 +1,6 @@
 {
   description = "A very basic flake";
-  inputs = {
-    arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
-  };
+  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp"; };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
     let
@@ -15,6 +13,7 @@
       nixosModules = {
         default = { config, ... }: {
           nixpkgs.overlays = [ arbeitszeitapp.overlay ];
+          imports = [ modules/default.nix ];
         };
       };
       devShell = forAllSystems (system: pkgs:
@@ -25,28 +24,7 @@
         launchWebserver = pkgs.nixosTest {
           machine = { config, ... }: {
             imports = [ self.nixosModules.default ];
-            services.uwsgi = {
-              enable = true;
-              plugins = [ "python3" ];
-              capabilities = [ "CAP_NET_BIND_SERVICE" ];
-              instance = {
-                type = "emperor";
-                vassals.arbeitszeitapp = {
-                  env = [
-                    "ARBEITSZEIT_APP_CONFIGURATION=arbeitszeit_flask.development_settings"
-                  ];
-                  chdir = pkgs.writeTextDir "wsgi.py"
-                    (builtins.readFile settings/wsgi.py);
-                  type = "normal";
-                  master = true;
-                  workers = 1;
-                  http = ":8000";
-                  cap = "net_bind_service";
-                  module = "wsgi:app";
-                  pythonPackages = self: [ self.arbeitszeitapp ];
-                };
-              };
-            };
+            services.arbeitszeitapp.enable = true;
           };
           testScript = builtins.readFile tests/launchWebserver.py;
         };
