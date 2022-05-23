@@ -17,14 +17,19 @@
         pkgs.mkShell {
           packages = [ pkgs.python3Packages.black pkgs.nixfmt ];
         });
-      checks = forAllSystems (system: pkgs: {
-        launchWebserver = pkgs.nixosTest {
-          machine = { config, ... }: {
-            imports = [ self.nixosModules.default ];
-            services.arbeitszeitapp.enable = true;
-          };
-          testScript = builtins.readFile tests/launchWebserver.py;
-        };
-      });
+      checks = forAllSystems (system: pkgs:
+        let
+          makeSimpleTest = testFile:
+            pkgs.nixosTest {
+              machine = { config, ... }: {
+                imports = [ self.nixosModules.default ];
+                services.arbeitszeitapp.enable = true;
+              };
+              testScript = builtins.readFile testFile;
+            };
+        in {
+          launchWebserver = makeSimpleTest tests/launchWebserver.py;
+          canAccessMemberLogin = makeSimpleTest tests/canGetLoginForm.py;
+        });
     };
 }
