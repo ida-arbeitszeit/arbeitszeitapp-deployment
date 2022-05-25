@@ -30,10 +30,11 @@ let
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
     runtimeInputs = [
-      (pkgs.python3.withPackages (p: with p; [ arbeitszeitapp psycopg2 flask ]))
+      (pkgs.python3.withPackages (p: [ p.arbeitszeitapp p.psycopg2 p.flask ]))
     ];
     text = ''
-      FLASK_APP=arbeitszeit_flask \
+      cd ${stateDirectory}
+      FLASK_APP=arbeitszeit_flask.wsgi:app \
           ARBEITSZEITAPP_CONFIGURATION_PATH=${configFile} \
           flask "$@"
     '';
