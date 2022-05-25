@@ -6,16 +6,16 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1653477108,
-        "narHash": "sha256-WrFpyzCFM+hLGNqAZO29uamjugLBXASDOA+Z2Kq3+CI=",
+        "lastModified": 1653484967,
+        "narHash": "sha256-9I2rr3vJYA1Fs3jKbwJOw6flX4EE43OnK8XrIH7mIWg=",
         "owner": "arbeitszeit",
         "repo": "arbeitszeitapp",
-        "rev": "900ec34238a1f6e6b2204422d15d666ca0886e6c",
+        "rev": "fca72f6b6dd0ea593a2bac407dec39f425081e50",
         "type": "github"
       },
       "original": {
         "owner": "arbeitszeit",
-        "ref": "seppeljordan/configure-talisman",
+        "ref": "seppeljordan/include-static-in-dist",
         "repo": "arbeitszeitapp",
         "type": "github"
       }
@@ -67,10 +67,10 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1649944829,
-        "narHash": "sha256-wjOgLfjCdyoRamMOrVJceeDJk4LvJsQOxBoT3k16/7Q=",
-        "path": "/nix/store/m3adrmbqamid0r5f9gq2dk8vzvhlipy5-source",
-        "rev": "2f06b87f64bc06229e05045853e0876666e1b023",
+        "lastModified": 1653087707,
+        "narHash": "sha256-zfno3snrzZTWQ2B7K53QHrGZwrjnJLTRPalymrSsziU=",
+        "path": "/nix/store/3g25cg20m43hvsy17d7nz0jxwk79a77w-source",
+        "rev": "cbd40c72b2603ab54e7208f99f9b35fc158bc009",
         "type": "path"
       },
       "original": {

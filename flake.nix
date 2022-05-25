@@ -1,6 +1,6 @@
 {
   description = "A very basic flake";
-  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp/seppeljordan/configure-talisman"; };
+  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp/seppeljordan/include-static-in-dist"; };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
     let
@@ -23,13 +23,11 @@
             pkgs.nixosTest {
               machine = { config, ... }: {
                 imports = [ self.nixosModules.default ];
+                nixpkgs.overlays = [ arbeitszeitapp.overlays.default ];
                 services.arbeitszeitapp.enable = true;
               };
               testScript = builtins.readFile testFile;
             };
-        in {
-          launchWebserver = makeSimpleTest tests/launchWebserver.py;
-          canAccessMemberLogin = makeSimpleTest tests/canGetLoginForm.py;
-        });
+        in { launchWebserver = makeSimpleTest tests/launchWebserver.py; });
     };
 }

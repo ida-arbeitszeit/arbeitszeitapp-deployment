@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-black settings/*.py tests/*.py
+black tests/*.py
 nixfmt flake.nix

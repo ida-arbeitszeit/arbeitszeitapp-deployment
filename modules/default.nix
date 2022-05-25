@@ -18,7 +18,7 @@ let
         with open("${stateDirectory}/secret_key", "w") as handle:
             handle.write(SECRET_KEY)
     try:
-        with open("${stateDirectory}/secret_key") as handle:
+        with open("${stateDirectory}/password_salt") as handle:
             SECURITY_PASSWORD_SALT = handle.read()
     except FileNotFoundError:
         SECURITY_PASSWORD_SALT = secrets.token_hex(50)
@@ -42,7 +42,6 @@ in
     enable = lib.mkEnableOption "arbeitszeitapp";
   };
   config = lib.mkIf cfg.enable {
-    nixpkgs.overlays = [ arbeitszeitapp.overlays.default ];
     services.postgresql = {
       enable = true;
       ensureDatabases = [ dbname ];
