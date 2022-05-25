@@ -2,7 +2,7 @@
   description = "A very basic flake";
   inputs = {
     arbeitszeitapp.url =
-      "github:arbeitszeit/arbeitszeitapp/seppeljordan/include-static-in-dist";
+      "github:arbeitszeit/arbeitszeitapp/seppeljordan/experimental";
   };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
