@@ -27,13 +27,15 @@ let
     SQLALCHEMY_DATABASE_URI = "${databaseUri}"
     FORCE_HTTPS = False
   '';
-  preStart = pkgs.writeShellApplication {
+  manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
     runtimeInputs = [
       (pkgs.python3.withPackages (p: with p; [ arbeitszeitapp psycopg2 flask ]))
     ];
     text = ''
-      FLASK_APP=arbeitszeitapp SQLALCHEMY_DATABASE_URI=${databaseUri} flask "$@"
+      FLASK_APP=arbeitszeit_flask \
+          ARBEITSZEITAPP_CONFIGURATION_PATH=${configFile} \
+          flask "$@"
     '';
   };
 in
@@ -42,6 +44,9 @@ in
     enable = lib.mkEnableOption "arbeitszeitapp";
   };
   config = lib.mkIf cfg.enable {
+    environment.systemPackages = [
+      manageCommand
+    ];
     services.postgresql = {
       enable = true;
       ensureDatabases = [ dbname ];

@@ -1,6 +1,9 @@
 {
   description = "A very basic flake";
-  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp/seppeljordan/include-static-in-dist"; };
+  inputs = {
+    arbeitszeitapp.url =
+      "github:arbeitszeit/arbeitszeitapp/seppeljordan/include-static-in-dist";
+  };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
     let
