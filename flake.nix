@@ -1,6 +1,6 @@
 {
   description = "A very basic flake";
-  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp"; };
+  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp/seppeljordan/configure-talisman"; };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
     let
