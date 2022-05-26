@@ -28,6 +28,14 @@
                 imports = [ self.nixosModules.default ];
                 nixpkgs.overlays = [ arbeitszeitapp.overlays.default ];
                 services.arbeitszeitapp.enable = true;
+                services.arbeitszeitapp.emailConfigurationFile =
+                  pkgs.writeText "mailconfig.json" (builtins.toJSON {
+                    MAIL_SERVER = "mail.server.example";
+                    MAIL_PORT = "465";
+                    MAIL_USERNAME = "mail@mail.server.example";
+                    MAIL_PASSWORD = "secret password";
+                    MAIL_DEFAULT_SENDER = "sender@mail.server.example";
+                  });
               };
               testScript = builtins.readFile testFile;
             };

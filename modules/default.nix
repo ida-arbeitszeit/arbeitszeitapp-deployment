@@ -10,6 +10,7 @@ let
   dbname = "arbeitszeitapp";
   configFile = pkgs.writeText "arbeitszeitapp.cfg" ''
     import secrets
+    import json
     try:
         with open("${stateDirectory}/secret_key") as handle:
             SECRET_KEY = handle.read()
@@ -26,6 +27,13 @@ let
             handle.write(SECURITY_PASSWORD_SALT)
     SQLALCHEMY_DATABASE_URI = "${databaseUri}"
     FORCE_HTTPS = False
+    with open("${cfg.emailConfigurationFile}") as handle:
+        mail_config = json.load(handle)
+    MAIL_SERVER = mail_config["MAIL_SERVER"]
+    MAIL_PORT = mail_config["MAIL_PORT"]
+    MAIL_USERNAME = mail_config["MAIL_USERNAME"]
+    MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
+    MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
   '';
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
@@ -43,6 +51,21 @@ in
 {
   options.services.arbeitszeitapp = {
     enable = lib.mkEnableOption "arbeitszeitapp";
+    emailConfigurationFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to a json file containing the mail configuration in the
+        following format:
+
+        {
+          "MAIL_SERVER": "mail.server.example",
+          "MAIL_PORT": "465",
+          "MAIL_USERNAME": "username@mail.server.example",
+          "MAIL_PASSWORD": "my secret mail password",
+          "MAIL_DEFAULT_SENDER": "sender.address@mail.server.example"
+        }
+      '';
+    };
   };
   config = lib.mkIf cfg.enable {
     environment.systemPackages = [
@@ -86,7 +109,7 @@ in
     };
     systemd.tmpfiles.rules = [
       "d ${stateDirectory} 770 ${user} ${group}"
-    ];  
+    ];
     systemd.services.postgresql = {
         wantedBy = [ "uwsgi.service" ];
         before = [ "uwsgi.service" ];
