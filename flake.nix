@@ -13,9 +13,7 @@
         (system: f system (mkPkgs system));
       mkPkgs = system: import nixpkgs { inherit system; };
     in {
-      nixosModules = {
-        default = import modules/default.nix { inherit arbeitszeitapp; };
-      };
+      nixosModules = { default = import modules/default.nix; };
       devShell = forAllSystems (system: pkgs:
         pkgs.mkShell {
           packages = [ pkgs.python3Packages.black pkgs.nixfmt ];
@@ -28,6 +26,7 @@
                 imports = [ self.nixosModules.default ];
                 nixpkgs.overlays = [ arbeitszeitapp.overlays.default ];
                 services.arbeitszeitapp.enable = true;
+                services.arbeitszeitapp.hostName = "127.0.0.1:8000";
                 services.arbeitszeitapp.emailConfigurationFile =
                   pkgs.writeText "mailconfig.json" (builtins.toJSON {
                     MAIL_SERVER = "mail.server.example";

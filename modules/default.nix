@@ -1,4 +1,3 @@
-{ arbeitszeitapp }:
 { config, lib, pkgs, ...}:
 let
   package = pkgs.python3.pkgs.arbeitszeitapp;
@@ -29,11 +28,13 @@ let
     FORCE_HTTPS = False
     with open("${cfg.emailConfigurationFile}") as handle:
         mail_config = json.load(handle)
+    MAIL_BACKEND = "flask_mail"
     MAIL_SERVER = mail_config["MAIL_SERVER"]
     MAIL_PORT = mail_config["MAIL_PORT"]
     MAIL_USERNAME = mail_config["MAIL_USERNAME"]
     MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
     MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
+    SERVER_NAME = "${cfg.hostName}";
   '';
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
@@ -65,6 +66,13 @@ in
           "MAIL_DEFAULT_SENDER": "sender.address@mail.server.example"
         }
       '';
+    };
+    hostName = lib.mkOption {
+      type = lib.types.str;
+      description = ''
+        Hostname where the server can be reached.
+      '';
+      example = "my.server.example";
     };
   };
   config = lib.mkIf cfg.enable {
