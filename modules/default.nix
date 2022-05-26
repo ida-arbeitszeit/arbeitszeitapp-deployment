@@ -35,6 +35,8 @@ let
     MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
     MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
     SERVER_NAME = "${cfg.hostName}";
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = True
   '';
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
