@@ -7,6 +7,18 @@ let
   stateDirectory = "/var/lib/arbeitszeitapp";
   databaseUri = "postgresql:///${dbname}";
   dbname = "arbeitszeitapp";
+  mailConfigSection = ''
+    with open("${cfg.emailConfigurationFile}") as handle:
+        mail_config = json.load(handle)
+    MAIL_BACKEND = "flask_mail"
+    MAIL_SERVER = mail_config["MAIL_SERVER"]
+    MAIL_PORT = mail_config["MAIL_PORT"]
+    MAIL_USERNAME = mail_config["MAIL_USERNAME"]
+    MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
+    MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
+    MAIL_USE_TLS = ${if cfg.emailEncryptionType == "tls" then "True" else "False"}
+    MAIL_USE_SSL = ${if cfg.emailEncryptionType == "ssl" then "True" else "False"}
+  '';
   configFile = pkgs.writeText "arbeitszeitapp.cfg" ''
     import secrets
     import json
@@ -26,17 +38,8 @@ let
             handle.write(SECURITY_PASSWORD_SALT)
     SQLALCHEMY_DATABASE_URI = "${databaseUri}"
     FORCE_HTTPS = False
-    with open("${cfg.emailConfigurationFile}") as handle:
-        mail_config = json.load(handle)
-    MAIL_BACKEND = "flask_mail"
-    MAIL_SERVER = mail_config["MAIL_SERVER"]
-    MAIL_PORT = mail_config["MAIL_PORT"]
-    MAIL_USERNAME = mail_config["MAIL_USERNAME"]
-    MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
-    MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
     SERVER_NAME = "${cfg.hostName}";
-    MAIL_USE_TLS = False
-    MAIL_USE_SSL = True
+    ${mailConfigSection}
   '';
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
@@ -67,6 +70,12 @@ in
           "MAIL_PASSWORD": "my secret mail password",
           "MAIL_DEFAULT_SENDER": "sender.address@mail.server.example"
         }
+      '';
+    };
+    emailEncryptionType = lib.mkOption {
+      type = lib.types.enum [null "ssl" "tls"];
+      description = ''
+        The encryption scheme that will be used when sending email.
       '';
     };
     hostName = lib.mkOption {
