@@ -39,6 +39,7 @@ let
     SQLALCHEMY_DATABASE_URI = "${databaseUri}"
     FORCE_HTTPS = False
     SERVER_NAME = "${cfg.hostName}";
+    AUTO_MIGRATE = True
     ${mailConfigSection}
   '';
   manageCommand = pkgs.writeShellApplication {
@@ -49,6 +50,7 @@ let
     text = ''
       cd ${stateDirectory}
       FLASK_APP=arbeitszeit_flask.wsgi:app \
+          MPLCONFIGDIR=${stateDirectory} \
           ARBEITSZEITAPP_CONFIGURATION_PATH=${configFile} \
           flask "$@"
     '';
