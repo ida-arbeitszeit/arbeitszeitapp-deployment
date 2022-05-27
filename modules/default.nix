@@ -34,7 +34,7 @@ let
             SECURITY_PASSWORD_SALT = handle.read()
     except FileNotFoundError:
         SECURITY_PASSWORD_SALT = secrets.token_hex(50)
-        with open("${stateDirectory}/secret_key", "w") as handle:
+        with open("${stateDirectory}/password_salt", "w") as handle:
             handle.write(SECURITY_PASSWORD_SALT)
     SQLALCHEMY_DATABASE_URI = "${databaseUri}"
     FORCE_HTTPS = False
