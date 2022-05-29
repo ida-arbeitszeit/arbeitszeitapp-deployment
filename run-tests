@@ -1,0 +1,3 @@
+#!/usr/bin/env sh
+
+nix flake check -j 1 --print-build-logs
