@@ -10,7 +10,9 @@ let
   socketPath = "${socketDirectory}/arbeitszeit.sock";
   dbname = "arbeitszeitapp";
   mailConfigSection = ''
-    with open("${cfg.emailConfigurationFile}") as handle:
+    path = "${cfg.emailConfigurationFile}"
+    assert os.path.isfile(path)
+    with open(path) as handle:
         mail_config = json.load(handle)
     MAIL_BACKEND = "flask_mail"
     MAIL_SERVER = mail_config["MAIL_SERVER"]
@@ -29,6 +31,7 @@ let
     import secrets
     import json
     import os
+    import os.path
 
     def load_or_create(path):
         try:
