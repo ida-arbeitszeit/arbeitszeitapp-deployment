@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ...}:
+{ config, lib, pkgs, ... }:
 let
   package = pkgs.python3.pkgs.arbeitszeitapp;
   cfg = config.services.arbeitszeitapp;
@@ -6,6 +6,8 @@ let
   group = "arbeitszeitapp";
   stateDirectory = "/var/lib/arbeitszeitapp";
   databaseUri = "postgresql:///${dbname}";
+  socketDirectory = "/run/arbeitszeit";
+  socketPath = "${socketDirectory}/arbeitszeit.sock";
   dbname = "arbeitszeitapp";
   mailConfigSection = ''
     with open("${cfg.emailConfigurationFile}") as handle:
@@ -16,8 +18,12 @@ let
     MAIL_USERNAME = mail_config["MAIL_USERNAME"]
     MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
     MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
-    MAIL_USE_TLS = ${if cfg.emailEncryptionType == "tls" then "True" else "False"}
-    MAIL_USE_SSL = ${if cfg.emailEncryptionType == "ssl" then "True" else "False"}
+    MAIL_USE_TLS = ${
+      if cfg.emailEncryptionType == "tls" then "True" else "False"
+    }
+    MAIL_USE_SSL = ${
+      if cfg.emailEncryptionType == "ssl" then "True" else "False"
+    }
   '';
   configFile = pkgs.writeText "arbeitszeitapp.cfg" ''
     import secrets
@@ -55,8 +61,7 @@ let
           flask "$@"
     '';
   };
-in
-{
+in {
   options.services.arbeitszeitapp = {
     enable = lib.mkEnableOption "arbeitszeitapp";
     emailConfigurationFile = lib.mkOption {
@@ -75,7 +80,7 @@ in
       '';
     };
     emailEncryptionType = lib.mkOption {
-      type = lib.types.enum [null "ssl" "tls"];
+      type = lib.types.enum [ null "ssl" "tls" ];
       description = ''
         The encryption scheme that will be used when sending email.
       '';
@@ -89,20 +94,23 @@ in
     };
   };
   config = lib.mkIf cfg.enable {
-    environment.systemPackages = [
-      manageCommand
-    ];
+    environment.systemPackages = [ manageCommand ];
     services.postgresql = {
       enable = true;
       ensureDatabases = [ dbname ];
-      ensureUsers = [
-        {
-          name = user;
-          ensurePermissions = {
-            "DATABASE ${dbname}" = "ALL PRIVILEGES";
-          };
-        }
-      ];
+      ensureUsers = [{
+        name = user;
+        ensurePermissions = { "DATABASE ${dbname}" = "ALL PRIVILEGES"; };
+      }];
+    };
+    services.nginx = {
+      enable = true;
+      virtualHosts."${cfg.hostName}" = {
+        locations."/".extraConfig = ''
+          uwsgi_pass unix:${socketPath};
+          uwsgi_read_timeout 300;
+        '';
+      };
     };
     services.uwsgi = {
       enable = true;
@@ -119,8 +127,8 @@ in
           enable-threads = true;
           master = true;
           workers = 1;
-          http = ":8000";
-          cap = "net_bind_service";
+          socket = "${socketPath}";
+          chmod-socket = 660;
           module = "arbeitszeit_flask.wsgi:app";
           pythonPackages = self: [ self.arbeitszeitapp self.psycopg2 ];
           immediate-uid = user;
@@ -130,18 +138,21 @@ in
     };
     systemd.tmpfiles.rules = [
       "d ${stateDirectory} 770 ${user} ${group}"
+      "d ${socketDirectory} 770 ${user} ${group}"
     ];
     systemd.services.postgresql = {
-        wantedBy = [ "uwsgi.service" ];
-        before = [ "uwsgi.service" ];
+      wantedBy = [ "uwsgi.service" ];
+      before = [ "uwsgi.service" ];
     };
+
     users = {
+      users.nginx.extraGroups = [ group ];
       users.${user} = {
         isSystemUser = true;
         home = stateDirectory;
         inherit group;
       };
-      groups.${group} = {};
+      groups.${group} = { };
     };
   };
 }

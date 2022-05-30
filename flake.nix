@@ -1,9 +1,6 @@
 {
   description = "A very basic flake";
-  inputs = {
-    arbeitszeitapp.url =
-      "github:arbeitszeit/arbeitszeitapp";
-  };
+  inputs = { arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp"; };
 
   outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
     let

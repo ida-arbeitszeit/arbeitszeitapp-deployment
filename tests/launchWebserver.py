@@ -1,7 +1,10 @@
 machine.wait_for_unit("multi-user.target")
+machine.wait_for_unit("nginx.service")
 machine.wait_for_unit("uwsgi.service")
-machine.wait_for_open_port(8000)
-assert "Arbeitszeit" in machine.succeed("curl -vLf 127.0.0.1:8000/")
-assert "Arbeitszeit" in machine.succeed("curl -vLf 127.0.0.1:8000/member/login")
-machine.succeed("curl -vLf 127.0.0.1:8000/static/main.js")
+machine.wait_for_open_port(80)
+# The first connection takes a long time since it must build font
+# cache and run db migrations
+assert "Arbeitszeit" in machine.succeed("curl -vLf localhost/")
+assert "Arbeitszeit" in machine.succeed("curl -vLf localhost/member/login")
+machine.succeed("curl -vLf localhost/static/main.js")
 machine.succeed("sudo -u arbeitszeitapp arbeitszeitapp-manage db upgrade")
