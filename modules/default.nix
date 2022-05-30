@@ -28,20 +28,21 @@ let
   configFile = pkgs.writeText "arbeitszeitapp.cfg" ''
     import secrets
     import json
-    try:
-        with open("${stateDirectory}/secret_key") as handle:
-            SECRET_KEY = handle.read()
-    except FileNotFoundError:
-        SECRET_KEY = secrets.token_hex(50)
-        with open("${stateDirectory}/secret_key", "w") as handle:
-            handle.write(SECRET_KEY)
-    try:
-        with open("${stateDirectory}/password_salt") as handle:
-            SECURITY_PASSWORD_SALT = handle.read()
-    except FileNotFoundError:
-        SECURITY_PASSWORD_SALT = secrets.token_hex(50)
-        with open("${stateDirectory}/password_salt", "w") as handle:
-            handle.write(SECURITY_PASSWORD_SALT)
+    import os
+
+    def load_or_create(path):
+        try:
+            with open(path) as handle:
+                result = handle.read()
+        except FileNotFoundError:
+            result = secrets.token_hex(50)
+            with open(path, "w") as handle:
+                handle.write(result)
+            os.chmod(path, 0o600)
+        return result
+
+    SECRET_KEY = load_or_create("${stateDirectory}/secret_key")
+    SECURITY_PASSWORD_SALT = load_or_create("${stateDirectory}/secret_key")
     SQLALCHEMY_DATABASE_URI = "${databaseUri}"
     FORCE_HTTPS = False
     SERVER_NAME = "${cfg.hostName}";
