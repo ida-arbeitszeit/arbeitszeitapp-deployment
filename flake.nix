@@ -24,6 +24,7 @@
                 nixpkgs.overlays = [ arbeitszeitapp.overlays.default ];
                 services.arbeitszeitapp.enable = true;
                 services.arbeitszeitapp.hostName = "localhost";
+                services.arbeitszeitapp.enableHttps = false;
                 services.arbeitszeitapp.emailEncryptionType = null;
                 services.arbeitszeitapp.emailConfigurationFile =
                   pkgs.writeText "mailconfig.json" (builtins.toJSON {

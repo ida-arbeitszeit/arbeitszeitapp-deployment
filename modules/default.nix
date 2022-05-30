@@ -64,6 +64,7 @@ let
 in {
   options.services.arbeitszeitapp = {
     enable = lib.mkEnableOption "arbeitszeitapp";
+    enableHttps = lib.mkEnableOption "HTTPS connections to arbeitszeitapp";
     emailConfigurationFile = lib.mkOption {
       type = lib.types.path;
       description = ''
@@ -106,6 +107,8 @@ in {
     services.nginx = {
       enable = true;
       virtualHosts."${cfg.hostName}" = {
+        addSSL = cfg.enableHttps;
+        enableACME = cfg.enableHttps;
         locations."/".extraConfig = ''
           uwsgi_pass unix:${socketPath};
           uwsgi_read_timeout 300;
