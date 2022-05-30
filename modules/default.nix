@@ -11,7 +11,6 @@ let
   dbname = "arbeitszeitapp";
   mailConfigSection = ''
     path = "${cfg.emailConfigurationFile}"
-    assert os.path.isfile(path)
     with open(path) as handle:
         mail_config = json.load(handle)
     MAIL_BACKEND = "flask_mail"
@@ -31,7 +30,6 @@ let
     import secrets
     import json
     import os
-    import os.path
 
     def load_or_create(path):
         try:
@@ -136,10 +134,10 @@ in {
           workers = 1;
           socket = "${socketPath}";
           chmod-socket = 660;
+          chown-socket = "${user}:nginx";
           module = "arbeitszeit_flask.wsgi:app";
           pythonPackages = self: [ self.arbeitszeitapp self.psycopg2 ];
           immediate-uid = user;
-          immediate-gid = group;
         };
       };
     };
