@@ -149,6 +149,24 @@ in {
       wantedBy = [ "uwsgi.service" ];
       before = [ "uwsgi.service" ];
     };
+    systemd.services.arbeitszeitapp-payout = {
+      serviceConfig = {
+        Type = "oneshot";
+        User = user;
+      };
+      path = [ manageCommand ];
+      script = ''
+        arbeitszeitapp-manage payout
+      '';
+    };
+    systemd.timers.arbeitszeit-payout = {
+      wantedBy = [ "timers.target" ];
+      partOf = [ "arbeitszeitapp-payout.service" ];
+      timerConfig = {
+        Unit = "arbeitszeitapp-payout.service";
+        OnCalendar = "*-*-* 19:00:00";
+      };
+    };
 
     users = {
       users.nginx.extraGroups = [ group ];
