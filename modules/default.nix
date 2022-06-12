@@ -1,3 +1,4 @@
+{ overlay }:
 { config, lib, pkgs, ... }:
 let
   package = pkgs.python3.pkgs.arbeitszeitapp;
@@ -97,6 +98,7 @@ in {
     };
   };
   config = lib.mkIf cfg.enable {
+    nixpkgs.overlays = [ overlay ];
     environment.systemPackages = [ manageCommand ];
     services.postgresql = {
       enable = true;

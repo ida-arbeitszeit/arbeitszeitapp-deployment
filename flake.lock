@@ -34,20 +34,6 @@
         "type": "github"
       }
     },
-    "flake-utils_2": {
-      "locked": {
-        "lastModified": 1653893745,
-        "narHash": "sha256-0jntwV3Z8//YwuOjzhV2sgJJPt+HY6KhU7VZUL0fKZQ=",
-        "owner": "numtide",
-        "repo": "flake-utils",
-        "rev": "1ed9fb1935d260de5fe1c2f7ee0ebaae17ed2fa1",
-        "type": "github"
-      },
-      "original": {
-        "id": "flake-utils",
-        "type": "indirect"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1654398695,
@@ -79,7 +65,6 @@
     "root": {
       "inputs": {
         "arbeitszeitapp": "arbeitszeitapp",
-        "flake-utils": "flake-utils_2",
         "nixpkgs": "nixpkgs_2"
       }
     }
