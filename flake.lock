@@ -6,11 +6,11 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1656063282,
-        "narHash": "sha256-+3IEypoiVPXjVXVvGNdx9vxsKFfXDltARIiw85S34Gs=",
+        "lastModified": 1656606048,
+        "narHash": "sha256-v4okdmzGDpSDZjtZlMBoefquv0JR/jV+rtnDFG2cZTU=",
         "owner": "arbeitszeit",
         "repo": "arbeitszeitapp",
-        "rev": "3e86c2484d1e35b4fcd3052f6145c6d53d011b7f",
+        "rev": "9f67a806a63fc8008587a609632e59989d03fef7",
         "type": "github"
       },
       "original": {
