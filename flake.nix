@@ -1,8 +1,9 @@
 {
-  description = "A very basic flake";
+  description = "Implements a module for running arbeitszeitapp";
   inputs = {
-    arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
+    arbeitszeitapp.url =
+      "github:arbeitszeit/arbeitszeitapp/seppeljordan/update-nix-dependencies";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   };
 
   outputs = { self, nixpkgs, arbeitszeitapp }:
@@ -11,24 +12,31 @@
       forAllSystems = f:
         nixpkgs.lib.genAttrs supportedSystems
         (system: f system (mkPkgs system));
-      mkPkgs = system: import nixpkgs { inherit system; };
+      mkPkgs = system:
+        import nixpkgs {
+          inherit system;
+          overlays = [ arbeitszeitapp.overlays.default ];
+        };
     in {
+      packages = forAllSystems
+        (system: pkgs: { default = pkgs.python3.pkgs.arbeitszeitapp; });
       nixosModules = {
         default = import modules/default.nix {
           overlay = arbeitszeitapp.overlays.default;
         };
       };
       devShells = forAllSystems (system: pkgs: {
-        default = pkgs.mkShell {
-          packages = [ pkgs.python3Packages.black pkgs.nixfmt ];
-        };
+        default =
+          pkgs.mkShell { packages = [ pkgs.python3.pkgs.black pkgs.nixfmt ]; };
       });
       checks = forAllSystems (system: pkgs:
         let
-          makeSimpleTest = testFile:
+          makeSimpleTest = name: testFile:
             pkgs.nixosTest {
+              name = name;
               nodes.machine = { config, ... }: {
                 imports = [ self.nixosModules.default ];
+                nixpkgs.pkgs = pkgs;
                 services.arbeitszeitapp.enable = true;
                 services.arbeitszeitapp.hostName = "localhost";
                 services.arbeitszeitapp.enableHttps = false;
@@ -44,6 +52,9 @@
               };
               testScript = builtins.readFile testFile;
             };
-        in { launchWebserver = makeSimpleTest tests/launchWebserver.py; });
+        in {
+          launchWebserver =
+            makeSimpleTest "launchWebserver" tests/launchWebserver.py;
+        });
     };
 }

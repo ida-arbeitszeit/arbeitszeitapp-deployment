@@ -1,7 +1,6 @@
 { overlay }:
 { config, lib, pkgs, ... }:
 let
-  package = pkgs.python3.pkgs.arbeitszeitapp;
   cfg = config.services.arbeitszeitapp;
   user = "arbeitszeitapp";
   group = "arbeitszeitapp";
@@ -97,8 +96,9 @@ in {
       example = "my.server.example";
     };
   };
-  config = lib.mkIf cfg.enable {
+  config = {
     nixpkgs.overlays = [ overlay ];
+  } // lib.mkIf cfg.enable {
     environment.systemPackages = [ manageCommand ];
     services.postgresql = {
       enable = true;
@@ -138,7 +138,7 @@ in {
           chmod-socket = 660;
           chown-socket = "${user}:nginx";
           module = "arbeitszeit_flask.wsgi:app";
-          pythonPackages = self: [ self.arbeitszeitapp self.psycopg2 ];
+          pythonPackages = self: with self; [ arbeitszeitapp psycopg2 ];
           immediate-uid = user;
         };
       };
