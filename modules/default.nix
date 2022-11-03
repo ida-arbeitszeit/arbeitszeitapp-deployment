@@ -96,9 +96,8 @@ in {
       example = "my.server.example";
     };
   };
-  config = {
+  config = lib.mkIf cfg.enable {
     nixpkgs.overlays = [ overlay ];
-  } // lib.mkIf cfg.enable {
     environment.systemPackages = [ manageCommand ];
     services.postgresql = {
       enable = true;

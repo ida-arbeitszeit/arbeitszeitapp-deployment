@@ -12,14 +12,8 @@
       forAllSystems = f:
         nixpkgs.lib.genAttrs supportedSystems
         (system: f system (mkPkgs system));
-      mkPkgs = system:
-        import nixpkgs {
-          inherit system;
-          overlays = [ arbeitszeitapp.overlays.default ];
-        };
+      mkPkgs = system: import nixpkgs { inherit system; };
     in {
-      packages = forAllSystems
-        (system: pkgs: { default = pkgs.python3.pkgs.arbeitszeitapp; });
       nixosModules = {
         default = import modules/default.nix {
           overlay = arbeitszeitapp.overlays.default;
