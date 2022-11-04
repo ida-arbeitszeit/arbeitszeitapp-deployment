@@ -6,16 +6,15 @@
         "nixpkgs": "nixpkgs"
       },
       "locked": {
-        "lastModified": 1667473051,
-        "narHash": "sha256-b1b5uD4vpcfAcR1H9uBSimuZFPA+ZC0r2v3QJYPhzQY=",
+        "lastModified": 1667513646,
+        "narHash": "sha256-o/j8JZQBZU1X4/8wcxPcBYi/2UPZ1SFLJ38GPGZJZeY=",
         "owner": "arbeitszeit",
         "repo": "arbeitszeitapp",
-        "rev": "e87218fac71531d3f69a99cd8365102591f4aa45",
+        "rev": "448488297d489c44a7eadf90507849bdf51860e4",
         "type": "github"
       },
       "original": {
         "owner": "arbeitszeit",
-        "ref": "seppeljordan/update-nix-dependencies",
         "repo": "arbeitszeitapp",
         "type": "github"
       }
@@ -53,11 +52,11 @@
     },
     "nixpkgs_2": {
       "locked": {
-        "lastModified": 1667231093,
-        "narHash": "sha256-RERXruzBEBuf0c7OfZeX1hxEKB+PTCUNxWeB6C1jd8Y=",
+        "lastModified": 1667426640,
+        "narHash": "sha256-zJFPcWL9i0Y1BqzqEa8RKx+SiUgupHhYqPDCaFmlBpw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "d40fea9aeb8840fea0d377baa4b38e39b9582458",
+        "rev": "636051e353461f073ac55d5d42c1ed062a345046",
         "type": "github"
       },
       "original": {
