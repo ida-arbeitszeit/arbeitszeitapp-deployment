@@ -3,14 +3,15 @@
     "arbeitszeitapp": {
       "inputs": {
         "flake-utils": "flake-utils",
-        "nixpkgs": "nixpkgs"
+        "flask-profiler": "flask-profiler",
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1668191493,
-        "narHash": "sha256-uugftwu8smNccA9pDV8rsVHwma57Dg90fjmhsEGUO54=",
+        "lastModified": 1668882040,
+        "narHash": "sha256-dmk6tgg5zuVvzTLFtVT8KAdqaBE5lMKQiL/Cd36l/5o=",
         "owner": "arbeitszeit",
         "repo": "arbeitszeitapp",
-        "rev": "fabc9712bc306b63e59445b6406d035e5868ec23",
+        "rev": "befff4ba8a7cdf7c60d5edcda4a2b2cd73bdad40",
         "type": "github"
       },
       "original": {
@@ -34,13 +35,63 @@
         "type": "github"
       }
     },
+    "flake-utils_2": {
+      "locked": {
+        "lastModified": 1667395993,
+        "narHash": "sha256-nuEHfE/LcWyuSWnS8t12N1wc105Qtau+/OdUAjtQ0rA=",
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "rev": "5aed5285a952e0b949eb3ba02c12fa4fcfef535f",
+        "type": "github"
+      },
+      "original": {
+        "owner": "numtide",
+        "repo": "flake-utils",
+        "type": "github"
+      }
+    },
+    "flask-profiler": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": "nixpkgs"
+      },
+      "locked": {
+        "lastModified": 1668781195,
+        "narHash": "sha256-g0VEwLJyp33LtNEoR5H2h6DkUSyLmbwCAwWjfljMrr0=",
+        "owner": "seppeljordan",
+        "repo": "flask-profiler",
+        "rev": "d08b8c3f090de9bc741d1a110205fa010f66f630",
+        "type": "github"
+      },
+      "original": {
+        "owner": "seppeljordan",
+        "repo": "flask-profiler",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1667292599,
-        "narHash": "sha256-7ISOUI1aj6UKMPIL+wwthENL22L3+A9V+jS8Is3QsRo=",
+        "lastModified": 1668671332,
+        "narHash": "sha256-6QW9sTuLDcBLoR5EY+6LR7Y1k0dFVEMqcWY4jYOuiqM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "ef2f213d9659a274985778bff4ca322f3ef3ac68",
+        "rev": "54be84c3ac0122c2b2272fc68a9015304bc0bb73",
+        "type": "github"
+      },
+      "original": {
+        "owner": "NixOS",
+        "ref": "nixos-unstable",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1668681245,
+        "narHash": "sha256-IH8t+b9hCfNwEvdC55UEymn8jL457Fo/hx3N/kNTZso=",
+        "owner": "NixOS",
+        "repo": "nixpkgs",
+        "rev": "bd4bfd814e96488febb38b4b4d0549c56b840c7f",
         "type": "github"
       },
       "original": {
@@ -50,13 +101,13 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
+    "nixpkgs_3": {
       "locked": {
-        "lastModified": 1667991831,
-        "narHash": "sha256-DHgEsLZI044B9T4AjA3K6+yB9/DqLr4dyA7OIx0FG7o=",
+        "lastModified": 1668765800,
+        "narHash": "sha256-rC40+/W6Hio7b/RsY8SvQPKNx4WqNcTgfYv8cUMAvJk=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "872fceeed60ae6b7766cc0a4cd5bf5901b9098ec",
+        "rev": "52b2ac8ae18bbad4374ff0dd5aeee0fdf1aea739",
         "type": "github"
       },
       "original": {
@@ -69,7 +120,7 @@
     "root": {
       "inputs": {
         "arbeitszeitapp": "arbeitszeitapp",
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": "nixpkgs_3"
       }
     }
   },

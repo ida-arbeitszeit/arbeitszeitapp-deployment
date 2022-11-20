@@ -137,7 +137,12 @@ in {
           chmod-socket = 660;
           chown-socket = "${user}:nginx";
           module = "arbeitszeit_flask.wsgi:app";
-          pythonPackages = self: with self; [ arbeitszeitapp psycopg2 ];
+          pythonPackages = self:
+            with self; [
+              arbeitszeitapp
+              psycopg2
+              flask-profiler
+            ];
           immediate-uid = user;
         };
       };
@@ -165,7 +170,7 @@ in {
       partOf = [ "arbeitszeitapp-payout.service" ];
       timerConfig = {
         Unit = "arbeitszeitapp-payout.service";
-        OnCalendar = "*-*-* 19:00:00";
+        OnCalendar = "*-*-* *:*/15:00";
       };
     };
 
