@@ -45,9 +45,41 @@
               };
               testScript = builtins.readFile testFile;
             };
+          makeTestWithProfiling = name: testFile:
+            pkgs.nixosTest {
+              name = name;
+              nodes.machine = { config, ... }: {
+                imports = [ self.nixosModules.default ];
+                nixpkgs.pkgs = pkgs;
+                services.arbeitszeitapp.enable = true;
+                services.arbeitszeitapp.hostName = "localhost";
+                services.arbeitszeitapp.enableHttps = false;
+                services.arbeitszeitapp.emailEncryptionType = null;
+                services.arbeitszeitapp.emailConfigurationFile =
+                  pkgs.writeText "mailconfig.json" (builtins.toJSON {
+                    MAIL_SERVER = "mail.server.example";
+                    MAIL_PORT = "465";
+                    MAIL_USERNAME = "mail@mail.server.example";
+                    MAIL_PASSWORD = "secret password";
+                    MAIL_DEFAULT_SENDER = "sender@mail.server.example";
+                  });
+                services.arbeitszeitapp.profilingEnabled = true;
+                services.arbeitszeitapp.profilingCredentialsFile =
+                  pkgs.writeText "profiling.json" (builtins.toJSON {
+                    PROFILING_AUTH_USER = "testuser";
+                    PROFILING_AUTH_PASSWORD = "testpassword";
+                  });
+              };
+              testScript = builtins.readFile testFile;
+            };
         in {
           launchWebserver =
             makeSimpleTest "launchWebserver" tests/launchWebserver.py;
+          launchWebserverWithProfiling =
+            makeTestWithProfiling "launchWebserverWithProfiling"
+            tests/launchWebserver.py;
+          testProfiling =
+            makeTestWithProfiling "testProfiling" tests/testProfiling.py;
         });
     };
 }

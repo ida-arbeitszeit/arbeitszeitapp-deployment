@@ -9,6 +9,27 @@ let
   socketDirectory = "/run/arbeitszeit";
   socketPath = "${socketDirectory}/arbeitszeit.sock";
   dbname = "arbeitszeitapp";
+  profilingConfigSection = ''
+    def _make_profiler_config():
+        path = "${cfg.profilingCredentialsFile}"
+        with open(path) as handle:
+            config = json.load(handle)
+        return {
+            "enabled": True,
+            "storage": {
+                "engine": "sqlite",
+                "FILE": "${stateDirectory}/flask-profiler.db",
+            },
+            "ignore": ["^/static/.*"],
+            "endpointRoot": "profiling",
+            "basicAuth":{
+                "enabled": True,
+                "username": config['PROFILING_AUTH_USER'],
+                "password": config['PROFILING_AUTH_PASSWORD'],
+            },
+        }
+    FLASK_PROFILER = _make_profiler_config()
+  '';
   mailConfigSection = ''
     path = "${cfg.emailConfigurationFile}"
     with open(path) as handle:
@@ -49,11 +70,13 @@ let
     SERVER_NAME = "${cfg.hostName}";
     AUTO_MIGRATE = True
     ${mailConfigSection}
+    ${if cfg.profilingEnabled then profilingConfigSection else ""}
   '';
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
     runtimeInputs = [
-      (pkgs.python3.withPackages (p: [ p.arbeitszeitapp p.psycopg2 p.flask ]))
+      (pkgs.python3.withPackages
+        (p: [ p.arbeitszeitapp p.psycopg2 p.flask p.flask-profiler ]))
     ];
     text = ''
       cd ${stateDirectory}
@@ -81,6 +104,20 @@ in {
           "MAIL_DEFAULT_SENDER": "sender.address@mail.server.example"
         }
       '';
+    };
+    profilingEnabled = lib.mkEnableOption "profiling for arbeitszeitapp";
+    profilingCredentialsFile = lib.mkOption {
+      type = lib.types.path;
+      description = ''
+        Path to a json file containing the profiling login credentials in
+        the following format:
+
+        {
+          "PROFILING_AUTH_USER": "username",
+          "PROFILING_AUTH_PASSWORD": "password",
+        }
+      '';
+      default = "/dev/null";
     };
     emailEncryptionType = lib.mkOption {
       type = lib.types.enum [ null "ssl" "tls" ];
