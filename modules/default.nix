@@ -207,7 +207,7 @@ in {
       partOf = [ "arbeitszeitapp-payout.service" ];
       timerConfig = {
         Unit = "arbeitszeitapp-payout.service";
-        OnCalendar = "*-*-* *:*/15:00";
+        OnCalendar = "*-*-* *:7/15:00";
       };
     };
 
