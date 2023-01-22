@@ -49,6 +49,8 @@
             pkgs.nixosTest {
               name = name;
               nodes.machine = { config, ... }: {
+                virtualisation.memorySize = 2048;
+                virtualisation.diskSize = 1024;
                 imports = [ self.nixosModules.default ];
                 nixpkgs.pkgs = pkgs;
                 services.arbeitszeitapp.enable = true;
