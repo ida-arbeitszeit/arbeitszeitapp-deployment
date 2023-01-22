@@ -2,7 +2,7 @@
   description = "Implements a module for running arbeitszeitapp";
   inputs = {
     arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
   };
 
   outputs = { self, nixpkgs, arbeitszeitapp }:
