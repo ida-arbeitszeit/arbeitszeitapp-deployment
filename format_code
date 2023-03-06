@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 
-black tests/*.py
+black tests/*.py update_repository.py
 nixfmt flake.nix modules/default.nix
