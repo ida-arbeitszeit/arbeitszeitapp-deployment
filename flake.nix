@@ -3,27 +3,14 @@
   inputs = {
     arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs, arbeitszeitapp }:
+  outputs = { self, nixpkgs, arbeitszeitapp, flake-utils }:
     let
-      supportedSystems = [ "x86_64-linux" ];
-      forAllSystems = f:
-        nixpkgs.lib.genAttrs supportedSystems
-        (system: f system (mkPkgs system));
-      mkPkgs = system: import nixpkgs { inherit system; };
-    in {
-      nixosModules = {
-        default = import modules/default.nix {
-          overlay = arbeitszeitapp.overlays.default;
-        };
-      };
-      devShells = forAllSystems (system: pkgs: {
-        default =
-          pkgs.mkShell { packages = [ pkgs.python3.pkgs.black pkgs.nixfmt ]; };
-      });
-      checks = forAllSystems (system: pkgs:
+      systemDependent = flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
         let
+          pkgs = import nixpkgs { inherit system; };
           makeSimpleTest = name: testFile:
             pkgs.nixosTest {
               name = name;
@@ -74,14 +61,29 @@
               };
               testScript = builtins.readFile testFile;
             };
+          pythonEnv =
+            pkgs.python3.withPackages (p: with p; [ black mypy flake8 isort ]);
         in {
-          launchWebserver =
-            makeSimpleTest "launchWebserver" tests/launchWebserver.py;
-          launchWebserverWithProfiling =
-            makeTestWithProfiling "launchWebserverWithProfiling"
-            tests/launchWebserver.py;
-          testProfiling =
-            makeTestWithProfiling "testProfiling" tests/testProfiling.py;
+          devShells = {
+            default =
+              pkgs.mkShell { packages = [ pythonEnv pkgs.nixfmt pkgs.gh ]; };
+          };
+          checks = {
+            launchWebserver =
+              makeSimpleTest "launchWebserver" tests/launchWebserver.py;
+            launchWebserverWithProfiling =
+              makeTestWithProfiling "launchWebserverWithProfiling"
+              tests/launchWebserver.py;
+            testProfiling =
+              makeTestWithProfiling "testProfiling" tests/testProfiling.py;
+          };
         });
-    };
+      systemIndependent = {
+        nixosModules = {
+          default = import modules/default.nix {
+            overlay = arbeitszeitapp.overlays.default;
+          };
+        };
+      };
+    in systemDependent // systemIndependent;
 }
