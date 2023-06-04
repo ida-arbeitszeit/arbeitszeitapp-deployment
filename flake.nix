@@ -2,7 +2,7 @@
   description = "Implements a module for running arbeitszeitapp";
   inputs = {
     arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
