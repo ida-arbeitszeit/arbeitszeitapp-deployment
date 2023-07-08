@@ -192,21 +192,21 @@ in {
       wantedBy = [ "uwsgi.service" ];
       before = [ "uwsgi.service" ];
     };
-    systemd.services.arbeitszeitapp-payout = {
+    systemd.services.arbeitszeitapp-update-plans = {
       serviceConfig = {
         Type = "oneshot";
         User = user;
       };
       path = [ manageCommand ];
       script = ''
-        arbeitszeitapp-manage payout
+        arbeitszeitapp-manage calculate-fic-and-update-expired-plans
       '';
     };
-    systemd.timers.arbeitszeit-payout = {
+    systemd.timers.arbeitszeitapp-update-plans = {
       wantedBy = [ "timers.target" ];
-      partOf = [ "arbeitszeitapp-payout.service" ];
+      partOf = [ "arbeitszeitapp-update-plans.service" ];
       timerConfig = {
-        Unit = "arbeitszeitapp-payout.service";
+        Unit = "arbeitszeitapp-update-plans.service";
         OnCalendar = "*-*-* *:7/15:00";
       };
     };

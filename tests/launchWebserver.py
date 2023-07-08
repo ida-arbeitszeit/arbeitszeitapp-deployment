@@ -15,5 +15,5 @@ machine.succeed("systemctl restart uwsgi.service")
 machine.wait_for_unit("uwsgi.service")
 assert "Arbeitszeit" in machine.succeed("curl -vLf localhost/")
 
-# Check if payout job workds
-machine.succeed("systemctl start arbeitszeitapp-payout.service")
+# Check if update-plans job workds
+machine.succeed("systemctl start arbeitszeitapp-update-plans.service")
