@@ -9,11 +9,11 @@
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1688572346,
-        "narHash": "sha256-j2AbJwduHCevSnI62gGbGT5poPjwNvYy/40EtSJ3zj4=",
+        "lastModified": 1688827472,
+        "narHash": "sha256-j2lrp4SxIhuzUSordDmyWTH0zPiXYN+f4DDNDGLHwTQ=",
         "owner": "arbeitszeit",
         "repo": "arbeitszeitapp",
-        "rev": "151c076a90a88c42381e11a08303bea20c352f5c",
+        "rev": "c8141a5392a69aeb58e3526a61d47437b782b62c",
         "type": "github"
       },
       "original": {
@@ -161,11 +161,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1688594934,
-        "narHash": "sha256-3dUo20PsmUd57jVZRx5vgKyIN1tv+v/JQweZsve5q/A=",
+        "lastModified": 1688764204,
+        "narHash": "sha256-FsvK+tIvelCI0tWwlMDKfiyb7P/KfxpGbXMrdCKiT8s=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "e11142026e2cef35ea52c9205703823df225c947",
+        "rev": "d8bb6c681cf86265fdcf3cc3119f757bbb085835",
         "type": "github"
       },
       "original": {
