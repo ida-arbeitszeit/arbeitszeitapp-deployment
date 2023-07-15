@@ -192,25 +192,6 @@ in {
       wantedBy = [ "uwsgi.service" ];
       before = [ "uwsgi.service" ];
     };
-    systemd.services.arbeitszeitapp-update-plans = {
-      serviceConfig = {
-        Type = "oneshot";
-        User = user;
-      };
-      path = [ manageCommand ];
-      script = ''
-        arbeitszeitapp-manage calculate-fic-and-update-expired-plans
-      '';
-    };
-    systemd.timers.arbeitszeitapp-update-plans = {
-      wantedBy = [ "timers.target" ];
-      partOf = [ "arbeitszeitapp-update-plans.service" ];
-      timerConfig = {
-        Unit = "arbeitszeitapp-update-plans.service";
-        OnCalendar = "*-*-* *:7/15:00";
-      };
-    };
-
     users = {
       users.nginx.extraGroups = [ group ];
       users.${user} = {
