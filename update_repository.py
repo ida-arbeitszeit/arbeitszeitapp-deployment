@@ -24,7 +24,7 @@ def main() -> None:
         assert flake.run_checks().is_success
         temp_repo.add_changes()
         temp_repo.commit_changes("Update flake inputs")
-        temp_repo.push_branch(branch=update_branch, remote=github_remote)
+        temp_repo.push_branch(branch=update_branch, remote=github_remote, force=True)
 
 
 def get_repository_root_directory() -> Path:
@@ -54,17 +54,16 @@ class GitRepository:
         self._directory = directory
 
     def checkout_new_branch(self, name: str) -> None:
-        result = subprocess.run(
-            ["git", "checkout", "-b", name], check=True, cwd=self._directory
-        )
+        subprocess.run(["git", "checkout", "-b", name], check=True, cwd=self._directory)
 
     def create_remote(self, *, name: str, url: str) -> None:
         subprocess.run(
             ["git", "remote", "add", name, url], check=True, cwd=self._directory
         )
 
-    def push_branch(self, *, branch: str, remote: str) -> None:
-        subprocess.run(["git", "push", remote, branch], check=True, cwd=self._directory)
+    def push_branch(self, *, branch: str, remote: str, force: bool = False) -> None:
+        command = ["git", "push"] + (["-f"] if force else []) + [remote, branch]
+        subprocess.run(command, check=True, cwd=self._directory)
 
     def commit_changes(self, message: str) -> None:
         subprocess.run(
