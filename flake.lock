@@ -4,16 +4,15 @@
       "inputs": {
         "flake-utils": "flake-utils",
         "flask-profiler": "flask-profiler",
-        "nixos-22-11": "nixos-22-11",
         "nixos-23-05": "nixos-23-05",
         "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1692202669,
-        "narHash": "sha256-j1BPtJ/yLefgeNkYq25ksoVtHeOwmJ/NOpeiC2IbUpk=",
+        "lastModified": 1692551149,
+        "narHash": "sha256-uJj/bXNNN0vW9cK1bFFibaGhxu2u4uzBP2D4BFZTSkc=",
         "owner": "arbeitszeit",
         "repo": "arbeitszeitapp",
-        "rev": "3bf3b05ecb70b1b470d11a1eab45dfedce121aff",
+        "rev": "e55c50723af5f99533579c85b0d5cb9c007d4bb8",
         "type": "github"
       },
       "original": {
@@ -95,22 +94,6 @@
         "type": "github"
       }
     },
-    "nixos-22-11": {
-      "locked": {
-        "lastModified": 1688392541,
-        "narHash": "sha256-lHrKvEkCPTUO+7tPfjIcb7Trk6k31rz18vkyqmkeJfY=",
-        "owner": "NixOS",
-        "repo": "nixpkgs",
-        "rev": "ea4c80b39be4c09702b0cb3b42eab59e2ba4f24b",
-        "type": "github"
-      },
-      "original": {
-        "owner": "NixOS",
-        "ref": "nixos-22.11",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixos-23-05": {
       "locked": {
         "lastModified": 1691693223,
@@ -161,11 +144,11 @@
     },
     "nixpkgs_3": {
       "locked": {
-        "lastModified": 1692207601,
-        "narHash": "sha256-tfPGNKQcJT1cvT6ufqO/7ydYNL6mcJClvzbrzhKjB80=",
+        "lastModified": 1692414505,
+        "narHash": "sha256-sSTuyR9JYSxmUcYcj0Jvw1hIq1tz/Canw9mK0hEJvnE=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "b30c68669df77d981ce4aefd6b9d378563f6fc4e",
+        "rev": "4cdad15f34e6321a2f789b99d42815b9142ac2ba",
         "type": "github"
       },
       "original": {
