@@ -181,6 +181,7 @@ in {
               flask-profiler
             ];
           immediate-uid = user;
+          need-app = true;
         };
       };
     };
