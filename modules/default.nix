@@ -5,10 +5,9 @@ let
   user = "arbeitszeitapp";
   group = "arbeitszeitapp";
   stateDirectory = "/var/lib/arbeitszeitapp";
-  databaseUri = "postgresql:///${dbname}";
+  databaseUri = "postgresql:///${user}";
   socketDirectory = "/run/arbeitszeit";
   socketPath = "${socketDirectory}/arbeitszeit.sock";
-  dbname = "arbeitszeitapp";
   profilingConfigSection = ''
     def _make_profiler_config():
         path = "${cfg.profilingCredentialsFile}"
@@ -138,11 +137,16 @@ in {
     environment.systemPackages = [ manageCommand ];
     services.postgresql = {
       enable = true;
-      ensureDatabases = [ dbname ];
-      ensureUsers = [{
-        name = user;
-        ensurePermissions = { "DATABASE ${dbname}" = "ALL PRIVILEGES"; };
-      }];
+      ensureDatabases = [ user ];
+      ensureUsers = [
+        ({
+          name = user;
+        } // (if config.system.nixos.release == "23.05" then {
+          ensurePermissions = { "DATABASE ${user}" = "ALL PRIVILEGES"; };
+        } else {
+          ensureDBOwnership = true;
+        }))
+      ];
     };
     services.nginx = {
       enable = true;
