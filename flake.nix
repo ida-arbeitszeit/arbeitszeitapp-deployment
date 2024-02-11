@@ -2,14 +2,13 @@
   description = "Implements a module for running arbeitszeitapp";
   inputs = {
     arbeitszeitapp.url = "github:arbeitszeit/arbeitszeitapp";
-    nixpkgs-23-05.url = "github:NixOS/nixpkgs/nixos-23.05";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = { self, nixpkgs-23-05, nixpkgs-23-11, nixpkgs-unstable
-    , arbeitszeitapp, flake-utils }:
+  outputs =
+    { self, nixpkgs-23-11, nixpkgs-unstable, arbeitszeitapp, flake-utils }:
     let
       systemDependent = flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
         let
@@ -65,8 +64,8 @@
               testScript = builtins.readFile testFile;
             };
           nixpkgsVersions = {
-            nixpkgs-23-05 = import nixpkgs-23-05 { inherit system; };
             nixpkgs-23-11 = import nixpkgs-23-11 { inherit system; };
+            nixpkgs-unstable = import nixpkgs-unstable { inherit system; };
           };
           makeTestMatrix = testFunctions:
             builtins.foldl' (tests: testName:
