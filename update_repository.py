@@ -15,6 +15,7 @@ def main() -> None:
             name=github_remote,
             url="git@github.com:arbeitszeit/arbeitszeitapp-deployment.git",
         )
+        temp_repo.disable_detached_head_advice()
         temp_repo.fetch(github_remote)
         temp_repo.checkout_branch(f"{github_remote}/development")
         temp_repo.checkout_new_branch(update_branch)
@@ -87,6 +88,13 @@ class GitRepository:
         result = subprocess.run(["git", "diff", "--exit-code"], cwd=self._directory)
         return DiffResult(
             exit_code=result.returncode,
+        )
+
+    def disable_detached_head_advice(self) -> None:
+        subprocess.run(
+            ["git", "config", "advice.detachedHead", "false"],
+            cwd=self._directory,
+            check=True,
         )
 
 
