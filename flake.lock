@@ -10,13 +10,13 @@
       "locked": {
         "lastModified": 1713471516,
         "narHash": "sha256-s8wyx31+QQWWVjexjgWYDk+bXYSvu+QyYVO6A8aNMwI=",
-        "owner": "arbeitszeit",
+        "owner": "ida-arbeitszeit",
         "repo": "arbeitszeitapp",
         "rev": "d810e532aa013b3d74d9233372b5edfb95552290",
         "type": "github"
       },
       "original": {
-        "owner": "arbeitszeit",
+        "owner": "ida-arbeitszeit",
         "repo": "arbeitszeitapp",
         "type": "github"
       }
