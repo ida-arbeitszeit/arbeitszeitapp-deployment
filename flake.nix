@@ -3,12 +3,13 @@
   inputs = {
     arbeitszeitapp.url = "github:ida-arbeitszeit/arbeitszeitapp";
     nixpkgs-23-11.url = "github:NixOS/nixpkgs/nixos-23.11";
+    nixpkgs-24-05.url = "github:NixOS/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs =
-    { self, nixpkgs-23-11, nixpkgs-unstable, arbeitszeitapp, flake-utils }:
+  outputs = { self, nixpkgs-23-11, nixpkgs-24-05, nixpkgs-unstable
+    , arbeitszeitapp, flake-utils }:
     let
       systemDependent = flake-utils.lib.eachSystem [ "x86_64-linux" ] (system:
         let
@@ -65,6 +66,7 @@
             };
           nixpkgsVersions = {
             nixpkgs-23-11 = import nixpkgs-23-11 { inherit system; };
+            nixpkgs-24-05 = import nixpkgs-24-05 { inherit system; };
             nixpkgs-unstable = import nixpkgs-unstable { inherit system; };
           };
           makeTestMatrix = testFunctions:
