@@ -22,7 +22,7 @@ def main() -> None:
         flake = NixFlake(tempdir)
         flake.update_inputs()
         assert temp_repo.diff().has_changes
-        assert flake.run_checks().is_success
+        assert flake.run_checks(2).is_success
         temp_repo.add_changes()
         temp_repo.commit_changes("Update flake inputs")
         temp_repo.push_branch(branch=update_branch, remote=github_remote, force=True)
@@ -105,9 +105,9 @@ class NixFlake:
     def update_inputs(self) -> None:
         subprocess.run(["nix", "flake", "update"], cwd=self._directory, check=True)
 
-    def run_checks(self) -> FlakeCheckResult:
+    def run_checks(self, jobs: int) -> FlakeCheckResult:
         result = subprocess.run(
-            ["nix", "flake", "check", "--print-build-logs"], cwd=self._directory
+            ["nix", "flake", "check", "--print-build-logs", "-j", str(jobs)], cwd=self._directory
         )
         return FlakeCheckResult(exit_code=result.returncode)
 
