@@ -1,5 +1,10 @@
 { overlay }:
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   cfg = config.services.arbeitszeitapp;
   user = "arbeitszeitapp";
@@ -39,12 +44,8 @@ let
     MAIL_USERNAME = mail_config["MAIL_USERNAME"]
     MAIL_PASSWORD = mail_config["MAIL_PASSWORD"]
     MAIL_DEFAULT_SENDER = mail_config["MAIL_DEFAULT_SENDER"]
-    MAIL_USE_TLS = ${
-      if cfg.emailEncryptionType == "tls" then "True" else "False"
-    }
-    MAIL_USE_SSL = ${
-      if cfg.emailEncryptionType == "ssl" then "True" else "False"
-    }
+    MAIL_USE_TLS = ${if cfg.emailEncryptionType == "tls" then "True" else "False"}
+    MAIL_USE_SSL = ${if cfg.emailEncryptionType == "ssl" then "True" else "False"}
   '';
   configFile = pkgs.writeText "arbeitszeitapp.cfg" ''
     import secrets
@@ -74,8 +75,12 @@ let
   manageCommand = pkgs.writeShellApplication {
     name = "arbeitszeitapp-manage";
     runtimeInputs = [
-      (pkgs.python3.withPackages
-        (p: [ p.arbeitszeitapp p.psycopg2 p.flask p.flask-profiler ]))
+      (pkgs.python3.withPackages (p: [
+        p.arbeitszeitapp
+        p.psycopg2
+        p.flask
+        p.flask-profiler
+      ]))
     ];
     text = ''
       cd ${stateDirectory}
@@ -85,7 +90,8 @@ let
           flask "$@"
     '';
   };
-in {
+in
+{
   options.services.arbeitszeitapp = {
     enable = lib.mkEnableOption "arbeitszeitapp";
     enableHttps = lib.mkEnableOption "HTTPS connections to arbeitszeitapp";
@@ -119,7 +125,11 @@ in {
       default = "/dev/null";
     };
     emailEncryptionType = lib.mkOption {
-      type = lib.types.enum [ null "ssl" "tls" ];
+      type = lib.types.enum [
+        null
+        "ssl"
+        "tls"
+      ];
       description = ''
         The encryption scheme that will be used when sending email.
       '';
@@ -139,13 +149,21 @@ in {
       enable = true;
       ensureDatabases = [ user ];
       ensureUsers = [
-        ({
-          name = user;
-        } // (if config.system.nixos.release == "23.05" then {
-          ensurePermissions = { "DATABASE ${user}" = "ALL PRIVILEGES"; };
-        } else {
-          ensureDBOwnership = true;
-        }))
+        (
+          {
+            name = user;
+          }
+          // (
+            if config.system.nixos.release == "23.05" then
+              {
+                ensurePermissions = {
+                  "DATABASE ${user}" = "ALL PRIVILEGES";
+                };
+              }
+            else
+              { ensureDBOwnership = true; }
+          )
+        )
       ];
     };
     services.nginx = {
@@ -178,8 +196,8 @@ in {
           chmod-socket = 660;
           chown-socket = "${user}:nginx";
           module = "arbeitszeit_flask.wsgi:app";
-          pythonPackages = self:
-            with self; [
+          pythonPackages =
+            self: with self; [
               arbeitszeitapp
               psycopg2
               flask-profiler
